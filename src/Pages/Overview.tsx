@@ -7,7 +7,7 @@ interface OverviewProps {
 
 const Overview: React.FC<OverviewProps> = ({ isSidebarOpen }) => {
   return (
-    <div style={{height: 60}}
+    <div style={{height: '100%'}}
       className={`transition-all duration-300 ${
         isSidebarOpen ? "ml-64" : "ml-0"
       }`}
