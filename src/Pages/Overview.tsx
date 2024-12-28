@@ -1,16 +1,9 @@
 import React from 'react';
 
-interface OverviewProps {
-  isOpen: boolean;
-}
 
-const Overview: React.FC<OverviewProps> = ({ isOpen }) => {
+const Overview: React.FC = () => {
   return (
-    <div
-      className={`h-full p-6 transition-all duration-300 ${
-        isOpen ? 'ml-64' : 'ml-0'
-      } md:ml-0 md:pl-6`}
-    >
+    <div>
       <h1 className="text-2xl font-bold mb-6 text-white">Overview</h1>
       
       {/* Map Section */}
@@ -57,6 +50,12 @@ const Overview: React.FC<OverviewProps> = ({ isOpen }) => {
           </div>
         ))}
       </div>
+      {/* Charts population */}
+      <div className="bg-gray-700 p-4 rounded-lg mt-6">
+        <h2 className="text-lg font-bold text-white mb-2">Groth Population</h2>
+        <div className="h-64 bg-gray-600 rounded-lg flex items-center justify-center text-gray-300">
+        </div>
+    </div>
     </div>
   );
 };

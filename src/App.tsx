@@ -12,16 +12,17 @@ const App: React.FC = () => {
   return (
     <Router>
       <div className="flex">
-        {/* السايدبار مع حالة isOpen */}
         <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
 
-        {/* المحتوى الذي سيملأ الشاشة */}
-        <div className="flex-1 bg-gray-900 p-6 md:ml-64">
+        <div className={`flex-1 my-5 p-6 md:ml-64 h-full transition-all duration-300 ${
+        isOpen ? 'ml-64' : 'ml-0'
+      } md:ml-0 md:pl-6
+          `}>
           <Routes>
-            <Route path="/" element={<Overview isOpen={isOpen} />} />
-            <Route path="/village-management" element={<VillageManagement />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/" element={<Overview />} />
+            <Route path="/village-management" element={<VillageManagement/>} />
+            <Route path="/chat" element={<Chat/>} />
+            <Route path="/gallery" element={<Gallery/>} />
           </Routes>
         </div>
       </div>

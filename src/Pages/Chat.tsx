@@ -1,11 +1,12 @@
-interface IProps{ 
+import React from 'react';
 
-}
-
-const Chat = ({}:IProps) => {
+const Chat: React.FC = () => {
   return (
-    <div></div>
-  )
-}
+    <div>
+      <h1 className="text-2xl font-bold mb-6 text-white">Chat</h1>
 
-export default Chat         
+    </div>
+  );
+};
+
+export default Chat;

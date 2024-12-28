@@ -8,7 +8,7 @@ type SidebarProps = {
 
 };
 
-const SidebarLink: React.FC<SidebarProps> = ({ icon, label, to,  }) => {
+const SidebarLink: React.FC<SidebarProps> = ({ icon, label, to}) => {
   return (
     <Link
       to={to}

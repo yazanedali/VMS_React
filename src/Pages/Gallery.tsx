@@ -1,11 +1,13 @@
-interface IProps{ 
+import React from 'react';
 
-}
 
-const Gallery = ({}:IProps) => {
+const Gallery: React.FC = () => {
   return (
-    <div></div>
-  )
-}
+    <div>
+      <h1 className="text-2xl font-bold mb-6 text-white">Gallery</h1>
 
-export default Gallery
+    </div>
+  );
+};
+
+export default Gallery;

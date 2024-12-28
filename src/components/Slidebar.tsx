@@ -11,7 +11,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="text-white md:hidden fixed top-4 left-4 z-50"
+        className="text-white md:hidden fixed top-1 left-4 z-50 text-xl"
       >
         ☰
       </button>

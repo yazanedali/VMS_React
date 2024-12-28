@@ -1,11 +1,12 @@
-interface IProps{ 
+import React from 'react';
 
-}
-
-const VillageManagement = ({}:IProps) => {
+const VillageManagement: React.FC = () => {
   return (
-    <div></div>
-  )
-}
+    <div>
+      <h1 className="text-2xl font-bold text-white">Village Management</h1>
 
-export default VillageManagement
+    </div>
+  );
+};
+
+export default VillageManagement;
