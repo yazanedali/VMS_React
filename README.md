@@ -12,8 +12,8 @@
 
 ### Tailwind CSS
 
-### 🚀 Quick Start:
+## 🚀 Quick Start:
 
-## Install dependencies: yarn install
+### Install dependencies: yarn install
 
-## Start the project: yarn dev
+### Start the project: yarn dev
