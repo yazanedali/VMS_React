@@ -23,10 +23,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       >
         <h1 className="text-2xl font-bold mb-6 mt-6">Dashboard</h1>
         <ul className="space-y-4 flex-grow">
-          <SidebarLink icon="🏠" label="Overview" to="/" />
-          <SidebarLink icon="📋" label="Village Management" to="/village-management" />
-          <SidebarLink icon="💬" label="Chat" to="/chat" />
-          <SidebarLink icon="🖼️" label="Gallery" to="/gallery" />
+          <SidebarLink icon="🏠" label="Overview" to="/" onklick={()=>setIsOpen(!isOpen)}/>
+          <SidebarLink icon="📋" label="Village Management" to="/village-management" onklick={()=>setIsOpen(!isOpen)}/>
+          <SidebarLink icon="💬" label="Chat" to="/chat" onklick={()=>setIsOpen(!isOpen)} />
+          <SidebarLink icon="🖼️" label="Gallery" to="/gallery"onklick={()=>setIsOpen(!isOpen)} />
         </ul>
         <div className="flex items-center gap-4 mt-4">
           <div className="w-10 h-10 bg-gray-600 rounded-full"></div>
@@ -34,7 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
             {(
               <>
                 <h4 className="text-sm font-medium">Admin Name</h4>
-                <a href="#" className="text-red-500 text-sm hover:underline">
+                <a href="#" className="text-red-500 text-sm hover:underline" onClick={()=>setIsOpen(!isOpen)}>
                   Logout
                 </a>
               </>

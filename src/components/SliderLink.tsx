@@ -5,12 +5,14 @@ type SidebarProps = {
   icon: string;
   label: string;
   to: string;
+  onklick:()=>void
 
 };
 
-const SidebarLink: React.FC<SidebarProps> = ({ icon, label, to}) => {
+const SidebarLink: React.FC<SidebarProps> = ({ icon, label, to, onklick}) => {
   return (
-    <Link
+    <Link    
+    onClick={onklick}
       to={to}
       className="flex items-center space-x-4 cursor-pointer hover:bg-gray-700 p-2 rounded-md"
     >
