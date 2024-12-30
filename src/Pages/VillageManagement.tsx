@@ -1,10 +1,12 @@
-import React from 'react';
+import React from "react";
+import Popup from "../components/Popup";
+import ContentManage from "../components/ContentManage";
 
 const VillageManagement: React.FC = () => {
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white">Village Management</h1>
-
+      <Popup />
+      <ContentManage />
     </div>
   );
 };
