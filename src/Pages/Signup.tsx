@@ -1,13 +1,19 @@
-interface IProps{ 
+import { useNavigate } from "react-router-dom";
 
-}
+const SignUp: React.FC = () => {
 
-const Signup = ({}:IProps) => {
+  const navigate = useNavigate();
+
+
   return (
-    <div>
-        <h1 className="text-white text-xlg">sign up here...</h1>
-    </div>
-  )
-}
+   
+          <button
+            onClick={() => navigate("/login")}
+            className="text-blue-500 hover:underline"
+          >
+            Login
+          </button>
+  );
+};
 
-export default Signup
+export default SignUp;
