@@ -57,6 +57,7 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
             Login
           </button>
         </form>
+        
         <button
             onClick={() => navigate('/Signup')}
             className="text-blue-500 hover:underline"
