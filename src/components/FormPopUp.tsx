@@ -44,7 +44,9 @@ const FormPopUp = ({ toggleModal, action }: IProps) => {
                 <InputForm key={index} id={key} label={value} />
               ))
             ) : action === "View" ? (
-              Object.entries(view).map(([, value]) => <div>{value}</div>)
+              Object.entries(view).map(([Key, value]) => (
+                <div key={Key}>{value}</div>
+              ))
             ) : action === "Update Demographic Data" ? (
               Object.entries(inputAddDemog).map(([key, value], index) => (
                 <InputForm key={index} id={key} label={value} />
