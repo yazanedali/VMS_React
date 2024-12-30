@@ -4,9 +4,12 @@ import SidebarLink from "./SliderLink";
 interface SidebarProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isAuthenticated: boolean;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, isAuthenticated }) => {
+  if (!isAuthenticated) return null;
+
   return (
     <div>
       <button
@@ -23,22 +26,25 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       >
         <h1 className="text-2xl font-bold mb-6 mt-6">Dashboard</h1>
         <ul className="space-y-4 flex-grow">
-          <SidebarLink icon="🏠" label="Overview" to="/" onklick={()=>setIsOpen(!isOpen)}/>
-          <SidebarLink icon="📋" label="Village Management" to="/village-management" onklick={()=>setIsOpen(!isOpen)}/>
-          <SidebarLink icon="💬" label="Chat" to="/chat" onklick={()=>setIsOpen(!isOpen)} />
-          <SidebarLink icon="🖼️" label="Gallery" to="/gallery"onklick={()=>setIsOpen(!isOpen)} />
+          <SidebarLink icon="🏠" label="Overview" to="/" onklick={() => setIsOpen(!isOpen)} />
+          <SidebarLink icon="📋" label="Village Management" to="/village-management" onklick={() => setIsOpen(!isOpen)} />
+          <SidebarLink icon="💬" label="Chat" to="/chat" onklick={() => setIsOpen(!isOpen)} />
+          <SidebarLink icon="🖼️" label="Gallery" to="/gallery" onklick={() => setIsOpen(!isOpen)} />
         </ul>
         <div className="flex items-center gap-4 mt-4">
           <div className="w-10 h-10 bg-gray-600 rounded-full"></div>
           <div>
-            {(
-              <>
-                <h4 className="text-sm font-medium">Admin Name</h4>
-                <a href="#" className="text-red-500 text-sm hover:underline" onClick={()=>setIsOpen(!isOpen)}>
-                  Logout
-                </a>
-              </>
-            )}
+            <h4 className="text-sm font-medium">Admin Name</h4>
+            <a 
+              href="#"
+              className="text-red-500 text-sm hover:underline"
+              onClick={() => {
+                setIsOpen(!isOpen);
+                localStorage.removeItem("isAuthenticated");
+                window.location.reload();
+              }}
+            >Logout<span className="text-lg">👋</span>
+            </a>
           </div>
         </div>
       </div>
