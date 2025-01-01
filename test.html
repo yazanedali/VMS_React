@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GraphQL User Add</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input {
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 200px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add User</h1>
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" required><br>
+
+        <label for="age">Age:</label>
+        <input type="number" id="age" required><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" required><br><br>
+
+        <button onclick="submitForm()">Add User</button>
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        const submitForm = async () => {
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            const email = document.getElementById('email').value;
+
+            // استعلام GraphQL لإضافة مستخدم جديد
+            const mutation = `
+                mutation {
+                    userAdd(name: "${name}", age: ${age}, email: "${email}")
+                }
+            `;
+
+            try {
+                const response = await fetch('http://localhost:5000/graphql', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: mutation
+                    }),
+                });
+
+                const result = await response.json();
+
+                // عرض النتيجة
+                if (result.errors) {
+                    document.getElementById('result').innerText = `Error: ${result.errors[0].message}`;
+                } else {
+                    document.getElementById('result').innerText = `Success: ${result.data.userAdd}`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'Error connecting to server';
+            }
+        };
+    </script>
+</body>
+</html>
