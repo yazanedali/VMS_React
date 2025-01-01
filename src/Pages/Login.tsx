@@ -12,7 +12,7 @@ const Login: React.FC = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#0f172a] text-white">
       <div className="bg-[#1e293b] p-8 rounded-lg shadow-md w-full max-w-md">
-        <form className="login-form">
+        <form className="login-form" onSubmit={()=>navigate("/Home")}>
           <h2 className="text-center text-2xl font-bold text-[#e2e8f0] mb-6">Login</h2>
           
           <div className="mb-6">

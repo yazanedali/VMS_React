@@ -1,6 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 const Signup: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#0F172A]">
       <div className="bg-[#1E293B] p-8 rounded-lg shadow-md w-full max-w-md">
@@ -42,7 +46,7 @@ const Signup: React.FC = () => {
         </form>
 
         <p className="text-center text-sm text-[#94A3B8] mt-4">
-          Already have an account? <a href="login.html" className="text-[#3B82F6] hover:underline">Login</a>
+          Already have an account? <a  className="text-[#3B82F6] hover:underline hover:cursor-pointer" onClick={()=> navigate("/")}>Login</a>
         </p>
       </div>
     </div>
