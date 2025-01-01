@@ -19,7 +19,7 @@ const ItemVillage = ({ NameVillage }: IProps) => {
       <div className="mt-4">
         <div className="bg-gray-700 rounded-md p-4 flex flex-col lg:flex-row lg:items-center lg:justify-between">
           <p className="text-white">{NameVillage}</p>
-          <div className="bg-gray-700 rounded-md p-4 flex flex-col lg:flex-row lg:items-center ">
+          <div className="bg-gray-700 rounded-md p-1 flex flex-col lg:flex-row lg:items-center ">
             {Object.entries(buttonData).map(([key, data]) => (
               <button
                 key={key}
