@@ -1,19 +1,83 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
+  const [obj, setobj] = useState<prop>({
+    fullname: "",
+    username: "",
+    password: ""
+  })
+
+  interface prop {
+    fullname: string;
+    username: string;
+    password: string
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setobj((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
+
+
+  
+
+  const submitForm = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const mutation = `
+      mutation {
+      signup(fullName:"${obj.fullname}", username:"${obj.username}", password:"${obj.password}") {
+        id
+        fullName
+        username
+        role
+        }
+      }
+    `;
+
+    try {
+      const response = await fetch('http://localhost:5000/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: mutation }),
+      });
+
+      const result = await response.json();
+      if (result.errors) {
+        console.log("error")
+      } else {
+        console.log(`sucsess:  ${JSON.stringify(result.data.signup)}`)
+        navigate('/')
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+
 
   return (
+    
     <div className="flex items-center justify-center min-h-screen bg-[#0F172A]">
       <div className="bg-[#1E293B] p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-center text-2xl font-bold text-[#E2E8F0] mb-6">Sign Up</h2>
-        <form>
+        <form onSubmit={submitForm}>
           <label htmlFor="full-name" className="block mb-2 text-sm text-white">Full Name</label>
           <input
             type="text"
             id="full-name"
+            name = "fullname"
+            value={obj.fullname}
+            onChange={handleChange}
             placeholder="Enter your full name"
             required
             className="w-full p-2 mb-4 border border-[#3D4D70] rounded bg-white text-black text-sm placeholder-gray-400"
@@ -23,6 +87,9 @@ const Signup: React.FC = () => {
           <input
             type="text"
             id="username"
+            name = "username"
+            value={obj.username}
+            onChange={handleChange}
             placeholder="Enter your username"
             required
             className="w-full p-2 mb-4 border border-[#3D4D70] rounded bg-white text-black text-sm placeholder-gray-400"
@@ -32,6 +99,9 @@ const Signup: React.FC = () => {
           <input
             type="password"
             id="password"
+            name = "password"
+            value={obj.password}
+            onChange={handleChange}
             placeholder="Enter your password"
             required
             className="w-full p-2 mb-4 border border-[#3D4D70] rounded bg-white text-black text-sm placeholder-gray-400"

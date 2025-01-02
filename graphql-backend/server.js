@@ -2,13 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { graphqlHTTP } = require('express-graphql');
 const { buildSchema } = require('graphql');
-const cors = require('cors');  // إضافة مكتبة CORS
-
-// استيراد نموذج المستخدم
+const cors = require('cors');
+const bcrypt = require('bcrypt'); 
 const User = require('./models/user');
 
 // الاتصال بقاعدة البيانات
-mongoose.connect('mongodb://localhost:27017/villageManegementDB')
+mongoose.connect('mongodb://localhost:27017/villageManagementDB')
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -16,78 +15,112 @@ mongoose.connect('mongodb://localhost:27017/villageManegementDB')
     console.error("Error connecting to MongoDB", err);
   });
 
-// إنشاء مخطط GraphQL (Schema)
+// تعريف GraphQL Schema
 const schema = buildSchema(`
   type Query {
-    hello: String
-    addNumbers(a: Int!, b: Int!): Int
-    getUser(name: String!): User
+    login(username: String!, password: String!): User
     getUsers: [User]
   }
 
   type Mutation {
-    userAdd(name: String!, age: Int!, email: String!): String
-    userUpdate(name: String!, age: Int, email: String): User
-    userDelete(name: String!): String
+    signup(fullName: String!, username: String!, password: String!): User
+    userUpdate(username: String!, fullName: String, password: String, role: String): User
+    userDelete(username: String!): String
   }
 
   type User {
-    name: String
-    age: Int
-    email: String
+    id: String
+    fullName: String
+    username: String
+    role: String
   }
 `);
 
-// إعداد الريزولفرز (Resolvers)
+// GraphQL Resolvers
 const root = {
-    hello: () => 'Hello, GraphQL!',
-    addNumbers: ({ a, b }) => a + b,
-    getUser: async ({ name }) => {
-        const user = await User.findOne({ name });
-        return user;
-    },
+
+login: async ({ username, password }) => { 
+    // البحث عن المستخدم بناءً على اسم المستخدم
+    const user = await User.findOne({ username }); 
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    // التحقق من كلمة المرور
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+        throw new Error('Invalid username or password');
+    }
+
+    // إعادة تفاصيل المستخدم إذا كانت كلمة المرور صحيحة
+    return {
+        id: user._id,
+        fullName: user.fullName,
+        username: user.username,
+        role: user.role,
+    };
+},
+
     getUsers: async () => {
         const users = await User.find();
         return users;
     },
-    userAdd: async ({ name, age, email }) => {
-        const newUser = new User({ name, age, email });
+    signup: async ({ fullName, username, password }) => {
+        // التحقق من وجود المستخدم
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            throw new Error('Username already exists.');
+        }
+
+        // تشفير كلمة المرور
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // إنشاء مستخدم جديد
+        const newUser = new User({
+            fullName,
+            username,
+            password: hashedPassword,
+        });
+
         try {
             const savedUser = await newUser.save();
-            return "done";
+            return savedUser;
         } catch (error) {
-            console.error('Error adding user:', error);
-            throw new Error('Failed to add user');
+            console.error('Error signing up user:', error);
+            throw new Error('Failed to sign up user');
         }
     },
-    userUpdate: async ({ name, age, email }) => {
+    userUpdate: async ({ username, fullName, password, role }) => {
+        const updates = {};
+        if (fullName) updates.fullName = fullName;
+        if (password) updates.password = await bcrypt.hash(password, 10);
+        if (role) updates.role = role;
+
         const user = await User.findOneAndUpdate(
-            { name },
-            { $set: { age, email } },
+            { username },
+            { $set: updates },
             { new: true }
         );
+
         return user;
     },
-    userDelete: async ({ name }) => {
-        const user = await User.findOneAndDelete({ name });
-        return user ? `${name} has been deleted.` : `User not found.`;
-    }
+    userDelete: async ({ username }) => {
+        const user = await User.findOneAndDelete({ username });
+        return user ? `${username} has been deleted.` : `User not found.`;
+    },
 };
 
-// إنشاء تطبيق Express
+// إعداد Express
 const app = express();
 
-// إضافة CORS للسماح بالاتصال من واجهة العميل
-app.use(cors());  // هذا السطر يسمح للطلبات من جميع المصادر
+app.use(cors());
 
-// إعداد GraphQL
 app.use('/graphql', graphqlHTTP({
     schema: schema,
     rootValue: root,
-    graphiql: true, // تفعيل واجهة GraphiQL التفاعلية
+    graphiql: true,
 }));
 
-// بدء السيرفر
 const PORT = 5000;
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}/graphql`);
