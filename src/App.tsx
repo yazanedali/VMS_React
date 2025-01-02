@@ -8,6 +8,7 @@ import Gallery from "./Pages/Gallery";
 import Login from "./Pages/Login";
 import SignUp from "./Pages/Signup";
 
+
 const App: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 

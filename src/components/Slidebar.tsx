@@ -1,6 +1,6 @@
 import React from "react";
 import SidebarLink from "./SliderLink";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -9,6 +9,8 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen}) => {
 const navigate = useNavigate();
+const location = useLocation();
+const fullName = location.state?.fullName || 'Guest';
   return (
     <div>
       <button
@@ -33,7 +35,7 @@ const navigate = useNavigate();
         <div className="flex items-center gap-4 mt-4">
           <div className="w-10 h-10 bg-gray-600 rounded-full"></div>
           <div>
-            <h4 className="text-sm font-medium">Admin Name</h4>
+            <h4 className="text-sm font-medium">{fullName}</h4>
             <a
               className="text-red-500 text-sm hover:underline hover:cursor-pointer"
               onClick={() => {

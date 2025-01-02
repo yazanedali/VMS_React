@@ -42,8 +42,19 @@
 
         <label for="email">Email:</label>
         <input type="email" id="email" required><br><br>
-
         <button onclick="submitForm()">Add User</button>
+    </div>
+
+
+    <div>
+        <label for="n1">Name:</label>
+        <input type="text" id="n1" required><br>
+
+        <label id ="age1">Age:</label>
+        <label id ="email1">email:</label>
+
+
+        <button onclick="getdata()">Add User</button>
     </div>
 
     <div id="result"></div>
@@ -57,7 +68,11 @@
             // استعلام GraphQL لإضافة مستخدم جديد
             const mutation = `
                 mutation {
-                    userAdd(name: "${name}", age: ${age}, email: "${email}")
+                    userAdd(name: "${name}", age: ${age}, email: "${email}") {
+                        name
+                        age
+                        email
+                    }
                 }
             `;
 
@@ -73,18 +88,61 @@
                 });
 
                 const result = await response.json();
+                console.log(`result = ${JSON.stringify(result.data.userAdd)}`);
 
                 // عرض النتيجة
                 if (result.errors) {
                     document.getElementById('result').innerText = `Error: ${result.errors[0].message}`;
                 } else {
-                    document.getElementById('result').innerText = `Success: ${result.data.userAdd}`;
+                    document.getElementById('result').innerText = `Success: ${JSON.stringify(result.data.userAdd)}`;
                 }
             } catch (error) {
                 console.error('Error:', error);
                 document.getElementById('result').innerText = 'Error connecting to server';
             }
         };
-    </script>
+
+
+        const getdata = async () => {
+            const name = document.getElementById('n1').value;
+            const query = `
+        query {
+            getUser(name: "${name}") {
+                age
+                email
+            }
+        }
+    `;
+                try {
+                const response = await fetch('http://localhost:5000/graphql', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query
+                        }
+                    ),
+                });
+
+                const result = await response.json();
+                console.log(`result = ${JSON.stringify(result.data.getUser)}`);
+
+                // عرض النتيجة
+                if (result.errors) {
+                    console.log("error");
+                } else {
+                    document.getElementById('age1').innerText = `${JSON.stringify(result.data.getUser.age)}`;
+                    document.getElementById('email1').innerText = `${JSON.stringify(result.data.getUser.email)}`;
+
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }; 
+            
+            
+                
+</script>
 </body>
 </html>
