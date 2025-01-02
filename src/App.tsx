@@ -1,5 +1,5 @@
-import React, { useState} from "react";
-import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from "./components/Slidebar";
 import Overview from "./Pages/Overview";
 import VillageManagement from "./Pages/VillageManagement";
@@ -8,26 +8,36 @@ import Gallery from "./Pages/Gallery";
 import Login from "./Pages/Login";
 import SignUp from "./Pages/Signup";
 
+const ProtectedRoute: React.FC<{ isAuthenticated: boolean; children: JSX.Element }> = ({
+  isAuthenticated,
+  children,
+}) => {
+  return isAuthenticated ? children : <Navigate to="/" />;
+};
 
 const App: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+    () => localStorage.getItem("isAuthenticated") === "true" // قراءة الحالة من localStorage عند تحميل التطبيق
+  );
 
+  useEffect(() => {
+    localStorage.setItem("isAuthenticated", isAuthenticated.toString());
+  }, [isAuthenticated]);
 
   return (
     <Router>
       <Routes>
-        <Route
-          path="/"
-          element={<Login/>}
-           />
+        <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+        
         <Route path="/signup" element={<SignUp />} />
 
         <Route
           path="*"
           element={
-
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
               <div className="flex">
-                <Sidebar isOpen={isOpen} setIsOpen={setIsOpen}/>
+                <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} setIsAuthenticated={setIsAuthenticated} />
                 <div
                   className={`flex-1 my-5 p-6 md:ml-64 h-full transition-all duration-300 ${
                     isOpen ? "ml-64" : "ml-0"
@@ -41,6 +51,7 @@ const App: React.FC = () => {
                   </Routes>
                 </div>
               </div>
+            </ProtectedRoute>
           }
         />
       </Routes>

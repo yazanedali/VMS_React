@@ -6,7 +6,6 @@ const cors = require('cors');
 const bcrypt = require('bcrypt'); 
 const User = require('./models/user');
 
-// الاتصال بقاعدة البيانات
 mongoose.connect('mongodb://localhost:27017/villageManagementDB')
   .then(() => {
     console.log("Connected to MongoDB");
@@ -66,16 +65,13 @@ login: async ({ username, password }) => {
         return users;
     },
     signup: async ({ fullName, username, password }) => {
-        // التحقق من وجود المستخدم
         const existingUser = await User.findOne({ username });
         if (existingUser) {
             throw new Error('Username already exists.');
         }
 
-        // تشفير كلمة المرور
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // إنشاء مستخدم جديد
         const newUser = new User({
             fullName,
             username,

@@ -10,6 +10,8 @@ const Signup: React.FC = () => {
     password: ""
   })
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   interface prop {
     fullname: string;
     username: string;
@@ -53,10 +55,11 @@ const Signup: React.FC = () => {
 
       const result = await response.json();
       if (result.errors) {
-        console.log("error")
+        setErrorMessage("The username is already taken. Please try a different one.");
       } else {
-        console.log(`sucsess:  ${JSON.stringify(result.data.signup)}`)
-        navigate('/')
+        setErrorMessage(null);
+        console.log(`Success: ${JSON.stringify(result.data.signup)}`);
+        navigate('/');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -114,6 +117,11 @@ const Signup: React.FC = () => {
             Sign Up
           </button>
         </form>
+        {errorMessage && (
+          <p className="text-red-500 text-sm mt-4 text-center">
+            {errorMessage}
+          </p>
+        )}
 
         <p className="text-center text-sm text-[#94A3B8] mt-4">
           Already have an account? <a  className="text-[#3B82F6] hover:underline hover:cursor-pointer" onClick={()=> navigate("/")}>Login</a>
