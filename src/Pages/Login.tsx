@@ -50,7 +50,8 @@ const Login: React.FC<{ setIsAuthenticated: React.Dispatch<React.SetStateAction<
       if (result.errors) {
         setErrorMessage('The username or password is not correct.');
       } else {
-        setErrorMessage(null); // إزالة أي رسالة خطأ سابقة
+        setErrorMessage(null);
+        localStorage.setItem('fullName', result.data.login.fullName); 
         setIsAuthenticated(true);
         navigate('/Home', { state: { fullName: result.data.login.fullName } });
       }
