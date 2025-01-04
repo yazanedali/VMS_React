@@ -18,7 +18,7 @@ const ProtectedRoute: React.FC<{ isAuthenticated: boolean; children: JSX.Element
 const App: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-    () => localStorage.getItem("isAuthenticated") === "true" // قراءة الحالة من localStorage عند تحميل التطبيق
+    () => localStorage.getItem("isAuthenticated") === "true"
   );
 
   useEffect(() => {
