@@ -4,7 +4,7 @@ export const inputName = {
   landArea: "Land Area (sq Km):",
   latitude: "Latitude:",
   longitude: "Longitude:",
-  urlmage: "",
+  urlmage: "link Image",
   tags:"Tags",
 };
 export const inputAddDemog = {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 interface IProps {
   id: string;
@@ -9,14 +9,9 @@ interface IProps {
 }
 
 const InputForm = ({ id, label, value, name, onChange }: IProps) => {
-  // إدارة حالة الملف (اختياري إذا كان المكون يستخدم للرفع فقط)
-  const [file, setFile] = useState<File | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (id === "urlmage" && e.target.files) {
-      setFile(e.target.files[0]);
-    }
-    onChange(e); // استدعاء الوظيفة التي تم تمريرها كخاصية
+    onChange(e);
   };
 
   return (
@@ -24,17 +19,17 @@ const InputForm = ({ id, label, value, name, onChange }: IProps) => {
       <div className="mb-3">
         <label
           htmlFor={id}
-          className="text-sm font-medium text-gray-900 dark:text-white"
+          className="text-sm font-medium  text-white"
         >
           {label}
         </label>
         <input
           onChange={handleInputChange}
           name={name}
-          value={id === "urlmage" ? undefined : value} // إزالة القيمة إذا كان النوع "file"
+          value={ value} 
           id={id}
-          type={id === "urlmage" ? "file" : "text"}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+          type={"text"}
+          className=" text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-600 border-gray-500 placeholder-gray-400 text-white"
           required
         />
       </div>
