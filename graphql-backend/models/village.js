@@ -11,10 +11,10 @@ const villageSchema = new mongoose.Schema({
     longitude: { type: String, required: true },
     urlmage: { type: String, required: false },
     tags: { type: String, required: true },
-    populationSize: { type: String, required: true },
-    ageDistribution: { type: String, required: true },
-    genderRatios: { type: String, required: true },
-    populationGrowthRate: { type: String, required: true },
+    populationGrowthRate: { type: String, default: "" },
+  genderRatios: { type: String, default: "" },
+  ageDistribution: { type: String, default: "" },
+  populationSize: { type: String, default: "" },
 
     
    });
