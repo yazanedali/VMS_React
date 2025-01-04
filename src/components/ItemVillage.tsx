@@ -4,9 +4,10 @@ import FormPopUp from "./FormPopUp";
 
 interface IProps {
   NameVillage: string;
+  idVillage: string;
 }
 
-const ItemVillage = ({ NameVillage }: IProps) => {
+const ItemVillage = ({ NameVillage, idVillage }: IProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentAction, setCurrentAction] = useState<string>("");
 
@@ -36,7 +37,13 @@ const ItemVillage = ({ NameVillage }: IProps) => {
         </div>
       </div>
 
-      {isOpen && <FormPopUp toggleModal={toggleModal} action={currentAction} />}
+      {isOpen && (
+        <FormPopUp
+          toggleModal={toggleModal}
+          action={currentAction}
+          idVillage={idVillage}
+        />
+      )}
     </div>
   );
 };

@@ -2,12 +2,293 @@ import InputForm from "./InputForm";
 import { inputName } from "../data/InputName";
 import { view } from "../data/InputName";
 import { inputAddDemog } from "../data/InputName";
+import { useEffect, useState } from "react";
 interface IProps {
   toggleModal: () => void;
   action: string;
+  idVillage?: string;
 }
 
-const FormPopUp = ({ toggleModal, action }: IProps) => {
+const FormPopUp = ({ toggleModal, action, idVillage }: IProps) => {
+  useEffect(() => {
+    if (action == "Update" || action == "View") {
+      const fetchVillages = async () => {
+        const query = `
+      query {
+         getVillage(id:"${idVillage}"){
+         
+         villageName
+     	   regionDistrict
+     	   landArea
+   			 latitude
+   			 longitude
+   			 urlmage
+         tags
+        
+        }
+      }
+          `;
+
+        try {
+          const response = await fetch("http://localhost:5000/graphql", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query }),
+          });
+
+          const result = await response.json();
+          if (result.errors) {
+            console.log("Error:", result.errors[0].message);
+          } else {
+            setInputValue(result.data.getVillage);
+            console.log(result.data.getVillage);
+            console.log("data ", inputValue);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      };
+
+      fetchVillages();
+    } else if (action == "Update Demographic Data") {
+      const fetchVillages = async () => {
+        const query = `
+      query {
+         getDemographic(id:"${idVillage}"){
+         
+        populationSize
+        ageDistribution
+        genderRatios
+        populationGrowthRate
+              
+        }
+      }
+          `;
+
+        try {
+          const response = await fetch("http://localhost:5000/graphql", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query }),
+          });
+
+          const result = await response.json();
+          if (result.errors) {
+            console.log("Error:", result.errors[0].message);
+          } else {
+            setInputValue(result.data.getDemographic);
+            console.log(result.data.getDemographic);
+            console.log("data ", inputAddDemog);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      };
+
+      fetchVillages();
+    }
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setInputValue((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  interface prop {
+    villageName: string;
+    regionDistrict: string;
+    landArea: string;
+    latitude: string;
+    longitude: string;
+    urlmage: string;
+    tags: string;
+
+    populationSize: string;
+    ageDistribution: string;
+    genderRatios: string;
+    populationGrowthRate: string;
+  }
+
+  const [inputValue, setInputValue] = useState<prop>({
+    villageName: "",
+    regionDistrict: "",
+    landArea: "",
+    latitude: "",
+    longitude: "",
+    urlmage: "",
+    tags: "",
+
+    populationSize: "",
+    ageDistribution: "",
+    genderRatios: "",
+    populationGrowthRate: "",
+  });
+
+  const handleAdd = async (e: React.FormEvent) => {
+    console.log("first");
+    e.preventDefault();
+
+    const mutation = `
+      mutation {
+      addVillage(
+      villageName:"${inputValue.villageName}",
+      regionDistrict:"${inputValue.regionDistrict}",
+      landArea:"$${inputValue.landArea}",
+      latitude:"${inputValue.latitude}",
+      longitude:"${inputValue.longitude}",
+      urlmage:"${inputValue.urlmage}"
+      tags:"${inputValue.tags}"
+      ) {
+         id
+         villageName
+     	   regionDistrict
+     	   landArea
+   			 latitude
+   			 longitude
+   			 urlmage
+         tags
+        
+        }
+      }
+    `;
+
+    try {
+      const response = await fetch("http://localhost:5000/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query: mutation }),
+      });
+
+      const result = await response.json();
+      if (result.errors) {
+        console.log("error");
+      } else {
+        console.log(`sucsess:  ${JSON.stringify(result.data.addVillage)}`);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    console.log(idVillage);
+    e.preventDefault();
+
+    const mutation = `
+      mutation {
+      villageUpdate(
+      id:"${idVillage}"
+      villageName:"${inputValue.villageName}",
+      regionDistrict:"${inputValue.regionDistrict}",
+      landArea:"$${inputValue.landArea}",
+      latitude:"${inputValue.latitude}",
+      longitude:"${inputValue.longitude}",
+      urlmage:"${inputValue.urlmage}"
+      tags:"${inputValue.tags}"
+
+      ) 
+      }
+    `;
+
+    try {
+      const response = await fetch("http://localhost:5000/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query: mutation }),
+      });
+
+      const result = await response.json();
+      if (result.errors) {
+        console.log("error");
+      } else {
+        console.log(`${JSON.stringify(result.data.villageUpdate)}`);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleUpdateDemographicData = async (e: React.FormEvent) => {
+    console.log(idVillage);
+    e.preventDefault();
+
+    const mutation = `
+      
+    mutation {
+      demographicUpdate (id:"${idVillage}",
+       populationSize:"${inputValue.populationSize}",
+      ageDistribution:"${inputValue.ageDistribution}",
+      genderRatios:"${inputValue.genderRatios}",
+      populationGrowthRate:"${inputValue.populationGrowthRate}")
+         
+  
+        
+      }
+    `;
+
+    try {
+      const response = await fetch("http://localhost:5000/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query: mutation }),
+      });
+
+      const result = await response.json();
+      if (result.errors) {
+        console.log("error");
+      } else {
+        console.log(`${JSON.stringify(result.data.demographicUpdate)}`);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleDelete = async (e: React.FormEvent) => {
+    console.log(idVillage);
+    e.preventDefault();
+
+    const mutation = `
+      
+mutation {
+     villageDelete (id:"${idVillage}")
+      }
+    `;
+
+    try {
+      const response = await fetch("http://localhost:5000/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query: mutation }),
+      });
+
+      const result = await response.json();
+      if (result.errors) {
+        console.log("error");
+      } else {
+        console.log(`${JSON.stringify(result.data.villageDelete)}`);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <div>
       <div
@@ -37,19 +318,43 @@ const FormPopUp = ({ toggleModal, action }: IProps) => {
           <div className="p-4">
             {action === "add" ? (
               Object.entries(inputName).map(([key, value], index) => (
-                <InputForm key={index} id={key} label={value} />
+                <InputForm
+                  key={index}
+                  id={key}
+                  label={value}
+                  onChange={handleChange}
+                  name={key}
+                  value={inputValue[key as keyof prop]}
+                />
               ))
             ) : action === "Update" ? (
               Object.entries(inputName).map(([key, value], index) => (
-                <InputForm key={index} id={key} label={value} />
+                <InputForm
+                  key={index}
+                  id={key}
+                  label={value}
+                  onChange={handleChange}
+                  name={key}
+                  value={inputValue[key as keyof prop]}
+                />
               ))
             ) : action === "View" ? (
-              Object.entries(view).map(([Key, value]) => (
-                <div key={Key}>{value}</div>
+              Object.entries(view).map(([Key, value], index) => (
+                <div key={index}>
+                  <span>{value}: </span>
+                  <span>{inputValue[Key as keyof prop]}</span>
+                </div>
               ))
             ) : action === "Update Demographic Data" ? (
               Object.entries(inputAddDemog).map(([key, value], index) => (
-                <InputForm key={index} id={key} label={value} />
+                <InputForm
+                  key={index}
+                  id={key}
+                  label={value}
+                  onChange={handleChange}
+                  name={key}
+                  value={inputValue[key as keyof prop]}
+                />
               ))
             ) : action === "Delete" ? (
               <div className="p-4 md:p-5 text-center">
@@ -57,6 +362,7 @@ const FormPopUp = ({ toggleModal, action }: IProps) => {
                   Are you sure you want to delete this village?
                 </h3>
                 <button
+                  onClick={handleDelete}
                   data-modal-hide="popup-modal"
                   type="button"
                   className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
@@ -77,13 +383,17 @@ const FormPopUp = ({ toggleModal, action }: IProps) => {
             )}
 
             <button
-              onClick={() => {
+              onClick={(e) => {
                 if (action === "add") {
-                  // handleAdd();
+                  handleAdd(e);
+                  toggleModal();
+                  console.log("dataa");
                 } else if (action === "Update") {
-                  // handleUpdate();
+                  toggleModal();
+                  handleUpdate(e);
                 } else if (action === "Update Demographic Data") {
-                  // handleUpdateDemographicData();
+                  toggleModal();
+                  handleUpdateDemographicData(e);
                 } else {
                   console.log("No action selected");
                 }
