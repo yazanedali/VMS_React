@@ -39,19 +39,16 @@ const schema = buildSchema(`
 const root = {
 
 login: async ({ username, password }) => { 
-    // البحث عن المستخدم بناءً على اسم المستخدم
     const user = await User.findOne({ username }); 
     if (!user) {
         throw new Error('User not found');
     }
 
-    // التحقق من كلمة المرور
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
         throw new Error('Invalid username or password');
     }
 
-    // إعادة تفاصيل المستخدم إذا كانت كلمة المرور صحيحة
     return {
         id: user._id,
         fullName: user.fullName,
