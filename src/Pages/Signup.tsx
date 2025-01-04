@@ -115,6 +115,11 @@ const Signup: React.FC = () => {
             Sign Up
           </button>
         </form>
+        {errorMessage && (
+          <p className="text-red-500 text-sm mt-4 text-center">
+            {errorMessage}
+          </p>
+        )}
 
         <p className="text-center text-sm text-[#94A3B8] mt-4">
           Already have an account?{" "}

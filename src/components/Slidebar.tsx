@@ -1,16 +1,16 @@
 import React from "react";
 import SidebarLink from "./SliderLink";
-import { useLocation, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 
 interface SidebarProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen}) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, setIsAuthenticated}) => {
 const navigate = useNavigate();
-const location = useLocation();
-const fullName = location.state?.fullName || 'Guest';
+const fullName = localStorage.getItem('fullName') || 'Guest';
   return (
     <div>
       <button
@@ -39,8 +39,10 @@ const fullName = location.state?.fullName || 'Guest';
             <a
               className="text-red-500 text-sm hover:underline hover:cursor-pointer"
               onClick={() => {
+                setIsAuthenticated(false); 
+                localStorage.removeItem("isAuthenticated"); 
                 setIsOpen(!isOpen);
-                navigate("/")
+                navigate("/");
               }}
             >Logout<span className="text-xl">👋</span>
             </a>
