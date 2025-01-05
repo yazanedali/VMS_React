@@ -33,6 +33,7 @@ const Login: React.FC<{ setIsAuthenticated: React.Dispatch<React.SetStateAction<
           id
           fullName
           role
+          username
         }
       }
     `;
@@ -52,8 +53,12 @@ const Login: React.FC<{ setIsAuthenticated: React.Dispatch<React.SetStateAction<
       } else {
         setErrorMessage(null);
         localStorage.setItem('fullName', result.data.login.fullName); 
+        localStorage.setItem("role", result.data.login.role);
         setIsAuthenticated(true);
-        navigate('/Home', { state: { fullName: result.data.login.fullName } });
+        navigate('/village-management', { state: { role: result.data.login.role } });
+        navigate('/Chat', { state: { role: result.data.login.role } });
+
+
       }
     } catch (error) {
       console.error('Error:', error);
