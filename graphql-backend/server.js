@@ -6,6 +6,8 @@ const cors = require('cors');
 const bcrypt = require('bcrypt'); 
 const User = require('./models/user');
 const Village = require('./models/village');
+const Message = require('./models/Message');  // استيراد نموذج الرسالة
+
 
 // الاتصال بقاعدة البيانات
 mongoose.connect('mongodb://localhost:27017/villageManagementDB')
@@ -26,6 +28,9 @@ const schema = buildSchema(`
 
     getVillage(id:String!):Village
     getDemographic(id:String!):Village
+
+        getUserChatMessages(username: String!): [ChatMessage]
+
 
   }
 
@@ -65,6 +70,9 @@ const schema = buildSchema(`
           ): String      
 
     villageDelete(id: String!): String
+
+    sendMessage(senderUsername: String!, receiverUsername: String!, message: String!): String
+
   }
 
   
@@ -89,6 +97,12 @@ const schema = buildSchema(`
     ageDistribution:String
     genderRatios:String
     populationGrowthRate:String
+  }
+
+  type ChatMessage {
+    sender: String
+    resever: String
+    message: String
   }
 `);
 
@@ -251,6 +265,42 @@ const root = {
         const village = await Village.findOneAndDelete({ id });
         return village ? `${name} has been deleted.` : `village not found.`;
     },
+
+    sendMessage: async ({ senderUsername, receiverUsername, message }) => {
+        const sender = await User.findOne({ username: senderUsername });
+        const receiver = await User.findOne({ username: receiverUsername });
+    
+        if (!sender || !receiver) {
+          throw new Error('Sender or Receiver not found');
+        }
+    
+        const newMessage = new Message({
+            fromUser: senderUsername,
+            toUser: receiverUsername,
+            message: message,
+        });
+        try {
+            const savedMsg = await newMessage.save();
+            return `sucsess ${senderUsername}`;
+        } catch (error) {
+            console.error('Error savedVillage:', error);
+            throw new Error('Failed to savedVillage');
+        }
+    },
+        getUserChatMessages: async ({ username }) => {
+    const user = await User.findOne({ username });
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const messages = await Message.find({
+      $or: [{ fromUser: user._id }, { toUser: user._id }],
+    })
+      .populate('fromUser', 'username fullName')
+      .populate('toUser', 'username fullName');
+
+    return messages;
+  },
     
 };
 

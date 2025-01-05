@@ -376,6 +376,11 @@ express@^4.21.2:
     utils-merge "1.0.1"
     vary "~1.1.2"
 
+extend@^3.0.0:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.2.tgz#f8b1136b4071fbd8eb140aff858b1019ec2915fa"
+  integrity sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==
+
 fill-range@^7.1.1:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/fill-range/-/fill-range-7.1.1.tgz#44265d3cac07e3ea7dc247516380643754a05292"
@@ -701,6 +706,13 @@ mongodb@~6.12.0:
     "@mongodb-js/saslprep" "^1.1.9"
     bson "^6.10.1"
     mongodb-connection-string-url "^3.0.0"
+
+mongoose-auto-increment@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/mongoose-auto-increment/-/mongoose-auto-increment-5.0.1.tgz#827e051d9cc371dabe8bff1a704431d341cb79df"
+  integrity sha512-fuSw0np0ZZXYjNBBrD6Wg0y70N0i5NhBuH3AIETTXCchaq45FeHpISoQ3fFbbdSFhfVEDRtg+hVxEDpFjdI2lw==
+  dependencies:
+    extend "^3.0.0"
 
 mongoose@^8.9.3:
   version "8.9.3"
