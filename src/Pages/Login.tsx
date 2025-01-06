@@ -56,8 +56,7 @@ const Login: React.FC<{ setIsAuthenticated: React.Dispatch<React.SetStateAction<
         localStorage.setItem("role", result.data.login.role);
         localStorage.setItem("username", result.data.login.username);
         setIsAuthenticated(true);
-        navigate('/village-management', { state: { role: result.data.login.role } });
-        navigate('/Chat', { state: { role: result.data.login.role } });
+        navigate('/Home', { state: { role: result.data.login.role } });
 
 
       }
