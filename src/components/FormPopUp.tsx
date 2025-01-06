@@ -190,7 +190,7 @@ const FormPopUp = ({ toggleModal, action, idVillage }: IProps) => {
       id:"${idVillage}"
       villageName:"${inputValue.villageName}",
       regionDistrict:"${inputValue.regionDistrict}",
-      landArea:"$${inputValue.landArea}",
+      landArea:"${inputValue.landArea}",
       latitude:"${inputValue.latitude}",
       longitude:"${inputValue.longitude}",
       urlmage:"${inputValue.urlmage}"

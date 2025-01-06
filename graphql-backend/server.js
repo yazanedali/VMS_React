@@ -28,8 +28,9 @@ const schema = buildSchema(`
 
     getVillage(id:String!):Village
     getDemographic(id:String!):Village
+    getUserChatMessages(username: String!): ChatMessages
+    getMessages(senderUsername: String!, receiverUsername: String!): [ChatMessage]
 
-        getUserChatMessages(username: String!): [ChatMessage]
 
 
   }
@@ -100,29 +101,31 @@ const schema = buildSchema(`
   }
 
   type ChatMessage {
+    id: String
     sender: String
-    resever: String
+    receiver: String
     message: String
   }
+
+  type ChatMessages {
+    sentMessages: [ChatMessage]
+    receivedMessages: [ChatMessage]
+}
 `);
 
-// GraphQL Resolvers
 const root = {
 
     login: async ({ username, password }) => { 
-        // البحث عن المستخدم بناءً على اسم المستخدم
         const user = await User.findOne({ username }); 
         if (!user) {
             throw new Error('User not found');
         }
 
-        // التحقق من كلمة المرور
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             throw new Error('Invalid username or password');
         }
 
-        // إعادة تفاصيل المستخدم إذا كانت كلمة المرور صحيحة
         return {
             id: user._id,
             fullName: user.fullName,
@@ -136,16 +139,13 @@ const root = {
         return users;
     },
     signup: async ({ fullName, username, password }) => {
-        // التحقق من وجود المستخدم
         const existingUser = await User.findOne({ username });
         if (existingUser) {
             throw new Error('Username already exists.');
         }
 
-        // تشفير كلمة المرور
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // إنشاء مستخدم جديد
         const newUser = new User({
             fullName,
             username,
@@ -179,7 +179,6 @@ const root = {
         return user ? `${username} has been deleted.` : `User not found.`;
     },
 
-///Village
 
     getVillages: async () => {
         const villags = await Village.find();
@@ -271,40 +270,85 @@ const root = {
         const receiver = await User.findOne({ username: receiverUsername });
     
         if (!sender || !receiver) {
-          throw new Error('Sender or Receiver not found');
+            throw new Error('Sender or Receiver not found');
         }
     
         const newMessage = new Message({
-            fromUser: senderUsername,
-            toUser: receiverUsername,
+            fromUsername: sender.username,
+            toUsername: receiver.username,
             message: message,
         });
+    
+    
         try {
-            const savedMsg = await newMessage.save();
-            return `sucsess ${senderUsername}`;
+
+            await newMessage.save();
+            return `Message sent successfully from ${senderUsername} to ${receiverUsername}`;
         } catch (error) {
-            console.error('Error savedVillage:', error);
-            throw new Error('Failed to savedVillage');
+            console.error('Error saving message:', error);
+            throw new Error('Failed to send message');
         }
     },
-        getUserChatMessages: async ({ username }) => {
-    const user = await User.findOne({ username });
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    const messages = await Message.find({
-      $or: [{ fromUser: user._id }, { toUser: user._id }],
-    })
-      .populate('fromUser', 'username fullName')
-      .populate('toUser', 'username fullName');
-
-    return messages;
-  },
     
+    getUserChatMessages: async ({ username }) => {
+
+        const user = await User.findOne({ username });
+        if (!user) {
+            throw new Error('User not found');
+        }
+    
+
+        const sentMessages = await Message.find({ fromUsername: username }).lean();
+    
+
+        const receivedMessages = await Message.find({ toUsername: username }).lean();
+    
+
+        return {
+            sentMessages: sentMessages.map(msg => ({
+                id: msg.id,
+                sender: msg.fromUsername, 
+                receiver: msg.toUsername, 
+                message: msg.message,
+            })),
+            receivedMessages: receivedMessages.map(msg => ({
+                id: msg.id,
+                sender: msg.fromUsername, // استخدم fromUsername
+                receiver: msg.toUsername, // استخدم toUsername
+                message: msg.message,
+            })),
+        };
+    },
+
+    getMessages: async ({ senderUsername, receiverUsername }) => {
+        const sender = await User.findOne({ username: senderUsername });
+        const receiver = await User.findOne({ username: receiverUsername });
+    
+        if (!sender || !receiver) {
+            throw new Error('Sender or Receiver not found');
+        }
+    
+        // جلب جميع الرسائل بين المرسل والمستقبل
+        const messages = await Message.find({
+            $or: [
+                { fromUsername: senderUsername, toUsername: receiverUsername },
+                { fromUsername: receiverUsername, toUsername: senderUsername }
+            ]
+        }).sort({ createdAt: 1 }); 
+    
+        // تحويل الرسائل إلى الشكل المطلوب
+        return messages.map(msg => ({
+            id: msg._id.toString(),
+            sender: msg.fromUsername,
+            receiver: msg.toUsername,
+            message: msg.message,
+        }));
+    },
+    
+    
+
 };
 
-// إعداد Express
 const app = express();
 
 app.use(cors());

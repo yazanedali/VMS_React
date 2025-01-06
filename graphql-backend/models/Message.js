@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
-const { v4: uuidv4 } = require('uuid'); 
 
 const messageSchema = new mongoose.Schema({
-    fromUser: { type: String, required: true },
-    toUser: { type: String, required: true },  
-    message: { type: String, required: true }, 
+    fromUsername: { type: String, required: true },
+    toUsername: { type: String, required: true },
+    message: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }, // تاريخ الإرسال
 });
 
-const Message = mongoose.model('Message', messageSchema);
-
-module.exports = Message;
+module.exports = mongoose.model('Message', messageSchema);
