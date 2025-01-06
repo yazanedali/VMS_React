@@ -137,9 +137,9 @@ const Chat: React.FC = () => {
     <div className="flex flex-col h-screen p-4">
       <h2 className="text-2xl font-bold text-white mb-6">Chat</h2>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="block  grid-cols-1 lg:grid-cols-2 gap-6">
         {/* User List Section */}
-        <div className="bg-gray-700 rounded-lg p-4">
+        <div className="mb-5 bg-gray-700 rounded-lg p-4">
           <h2 className="text-xl font-bold text-white mb-4">Available Users</h2>
           <input
             type="text"
@@ -148,7 +148,7 @@ const Chat: React.FC = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-gray-600 text-gray-200 rounded-md py-2 px-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <div className="flex flex-col gap-4">
+          <div className="grid gap-2 grid-cols-1 md:grid-cols-5 ">
             {filteredUsers.map((user) => (
               <div
                 key={user.id}
