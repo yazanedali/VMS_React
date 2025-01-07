@@ -383,85 +383,61 @@ const Overview: React.FC = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6 text-white">Overview</h1>
-
-      <div className="flex flex-row sm:flex-col lg:flex-col ">
-        {/* Map Section */}
-        <div className="bg-gray-700 p-4 rounded-lg mb-6 w-full">
-          <h2 className="text-lg font-bold text-white mb-2 text-center">Map</h2>
-          <div id="map" className="h-96 bg-gray-600 rounded-lg"></div>
+  
+      {/* Map Section */}
+      <div className="bg-gray-700 p-4 rounded-lg mb-6">
+        <h2 className="text-lg font-bold text-white mb-2">Map</h2>
+        <div id="map" className="h-96 bg-gray-700 rounded-lg flex items-center justify-center text-white">
+          Map Placeholder
         </div>
-
-        <div className="flex flex-col lg:flex-row lg:items-center mb-6 gap-5 ">
-          {/* Total Number Of Villages */}
-          <div className="bg-gray-700 p-4 rounded-lg w-full h-30">
-            <h2 className="text-lg font-bold text-white mb-2 text-center">
-              Total Number Of Villages
-            </h2>
-            <h2 className="text-white  text-center">{totalNumberOfVillages}</h2>
-          </div>
-
-          {/* Total Number Of Urban Areas */}
-          <div className="bg-gray-700 p-4 rounded-lg w-full h-30">
-            <h2 className="text-lg font-bold text-white mb-2 text-center">
-              Total Number Of Urban Areas
-            </h2>
-            <h2 className="text-white text-center ">
-              {totalNumberOfUrbanAreas}
-            </h2>
-          </div>
-
-          {/* Total Population Size */}
-          <div className="bg-gray-700 p-4 rounded-lg w-full h-30">
-            <h2 className="text-lg font-bold text-white mb-2 text-center">
-              Total Population Size
-            </h2>
-            <h2 className="text-white text-center">{totalPopulationSize}</h2>
-          </div>
-
-          {/* Average Land Area */}
-          <div className="bg-gray-700 p-4 rounded-lg w-full h-30">
-            <h2 className="text-lg font-bold text-white mb-2 text-center">
-              Average Land Area
-            </h2>
-            <h2 className="text-white text-center">{averageLandArea}</h2>
-          </div>
-        </div>
-
-        {/* Charts Section */}
-        <div className="flex flex-wrap justify-between items-start space-x-4 mb-6 gap-4">
-          {/* Age Distribution Chart */}
-          <div className="bg-gray-700 p-4 rounded-lg flex-1 w-full ">
-            <h2 className="text-lg font-bold text-white mb-2 text-center">
-              Age Distribution
-            </h2>
-            <div className="chart-container">
-              <canvas id="ageDistributionChart"></canvas>
+      </div>
+  
+      {/* Stats Section */}
+      <div className="sm:grid-cols-2 grid lg:grid-cols-4 gap-6">
+        {[{ title: 'Total Number of Villages', value: totalNumberOfVillages },
+          { title: 'Total Number of Urban Areas', value: totalNumberOfUrbanAreas },
+          { title: 'Total Population Size', value: totalPopulationSize },
+          { title: 'Average Land Area', value: averageLandArea }]
+          .map((stat, index) => (
+            <div
+              key={index}
+              className="bg-gray-700 p-4 rounded-lg flex flex-col items-center justify-center"
+            >
+              <h2 className="text-lg font-bold text-white text-center">
+                {stat.title}
+              </h2>
+              <p className="text-3xl text-white mt-2 text-center">
+                {stat.value}
+              </p>
             </div>
-          </div>
-
-          {/* Gender Ratios Chart */}
-          <div className="bg-gray-700 p-4 rounded-lg flex-1 w-full ">
-            <h2 className="text-lg font-bold text-white mb-2 text-center">
-              Gender Ratios
-            </h2>
-            <div className="chart-container">
-              <canvas id="genderRatiosChart"></canvas>
+          ))}
+      </div>
+  
+      {/* Charts Section */}
+      <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-6 mt-6">
+        {[{ title: 'Age Distribution', chartId: 'ageDistributionChart' },
+          { title: 'Gender Ratios', chartId: 'genderRatiosChart' }]
+          .map((chart, index) => (
+            <div key={index} className="bg-gray-700 p-4 rounded-lg">
+              <h2 className="text-lg font-bold text-white">{chart.title}</h2>
+              <div className="h-64 bg-gray-700 rounded-lg mt-4">
+                <canvas id={chart.chartId}></canvas>
+              </div>
             </div>
-          </div>
-        </div>
-
-        {/* Population Growth Chart */}
-        <div className="bg-gray-700 p-4 rounded-lg">
-          <h2 className="text-lg font-bold text-white mb-2 text-center">
-            Population Growth
-          </h2>
-          <div className="chart-container h-72">
-            <canvas id="populationChart"></canvas>
-          </div>
+          ))}
+      </div>
+  
+      {/* Population Growth Chart */}
+      <div className="bg-gray-700 p-4 rounded-lg mt-6">
+        <h2 className="text-lg font-bold text-white mb-2">Population Growth</h2>
+        <div className="h-64 bg-gray-700 rounded-lg flex items-center justify-center text-white">
+          <canvas id="populationChart"></canvas>
         </div>
       </div>
     </div>
   );
+  
+  
 };
 
 export default Overview;
