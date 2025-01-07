@@ -98,7 +98,7 @@ const Chat: React.FC = () => {
     };
 
     fetchMessages();
-  }, [selectedUser, currentUsername]);
+  }, [selectedUser, currentUsername, messages]);
 
   // Send a new message
   const sendMessage = async () => {
@@ -129,7 +129,7 @@ const Chat: React.FC = () => {
     }
   };
 
-  const filteredUsers = users.filter(user => 
+  const filteredUsers = users.filter((user) =>
     user.fullName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -152,12 +152,16 @@ const Chat: React.FC = () => {
             {filteredUsers.map((user) => (
               <div
                 key={user.id}
-                className={`flex items-center p-3 rounded-lg cursor-pointer transform transition-transform duration-300 ease-in-out ${selectedUser?.id === user.id ? "bg-blue-500" : "bg-gray-600"}`}
+                className={`flex items-center p-3 rounded-lg cursor-pointer transform transition-transform duration-300 ease-in-out ${
+                  selectedUser?.id === user.id ? "bg-blue-500" : "bg-gray-600"
+                }`}
                 onClick={() => setSelectedUser(user)}
               >
                 <div className="bg-gray-500 rounded-full w-12 h-12 mr-4"></div>
                 <div>
-                  <span className="text-white text-lg font-bold">{user.fullName}</span>
+                  <span className="text-white text-lg font-bold">
+                    {user.fullName}
+                  </span>
                   <div className="text-gray-400 text-sm">{user.role}</div>
                 </div>
               </div>
@@ -167,15 +171,22 @@ const Chat: React.FC = () => {
 
         {/* Chat Section */}
         <div className="flex flex-col bg-gray-700 rounded-lg p-4">
-          <h2 className="text-xl font-bold text-white mb-4">Chatting with {selectedUser?.fullName || '...'}</h2>
+          <h2 className="text-xl font-bold text-white mb-4">
+            Chatting with {selectedUser?.fullName || "..."}
+          </h2>
 
           <div className="flex-grow p-4 h-96 overflow-y-auto bg-gray-800 border-2 border-gray-600 rounded-md">
             {messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`p-2 rounded-lg mb-3 ${msg.sender === currentUsername ? "bg-blue-500 text-white ml-auto" : "bg-gray-600 text-gray-200"}`}
+                className={`p-2 rounded-lg mb-3 ${
+                  msg.sender === currentUsername
+                    ? "bg-blue-500 text-white ml-auto"
+                    : "bg-gray-600 text-gray-200"
+                }`}
               >
-                <strong>{msg.sender}: </strong>{msg.message}
+                <strong>{msg.sender}: </strong>
+                {msg.message}
               </div>
             ))}
           </div>
