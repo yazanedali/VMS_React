@@ -15,7 +15,7 @@ const ContentManage = ({}: IProps) => {
   }
 
   const [villageData, setVillageData] = useState<Prop[]>([]);
-  const [searchTerm, setSearchTerm] = useState<string>(""); 
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortOption, setSortOption] = useState<string>("default");
 
   useEffect(() => {
@@ -53,8 +53,7 @@ const ContentManage = ({}: IProps) => {
     };
 
     fetchVillages();
-  }, []);
-
+  }, [villageData]);
 
   const filteredAndSortedVillages = villageData
     .filter((village) =>
@@ -62,9 +61,9 @@ const ContentManage = ({}: IProps) => {
     )
     .sort((a, b) => {
       if (sortOption === "alphabetical") {
-        return a.villageName.localeCompare(b.villageName); 
+        return a.villageName.localeCompare(b.villageName);
       }
-      return 0; 
+      return 0;
     });
 
   return (
@@ -73,8 +72,8 @@ const ContentManage = ({}: IProps) => {
         <input
           type="text"
           placeholder="Search villages..."
-          value={searchTerm} 
-          onChange={(e) => setSearchTerm(e.target.value)} 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
           className="mb-10 bg-gray-700 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 flex w-full"
         />
 
@@ -86,8 +85,8 @@ const ContentManage = ({}: IProps) => {
                 <form className="max-w-sm mx-auto">
                   <select
                     id="sortOptions"
-                    value={sortOption} // ربط الحالة بالخيار
-                    onChange={(e) => setSortOption(e.target.value)} // تحديث حالة الترتيب
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value)}
                     className=" text-sm rounded-lg  block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="default">Default</option>

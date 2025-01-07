@@ -43,7 +43,7 @@ const FormPopUp = ({ toggleModal, action, idVillage }: IProps) => {
             console.log("Error:", result.errors[0].message);
           } else {
             setInputValue(result.data.getVillage);
-            console.log(result.data.getVillage)
+            console.log(result.data.getVillage);
             console.log("data ", inputValue);
           }
         } catch (error) {
@@ -287,6 +287,7 @@ mutation {
     } catch (error) {
       console.error("Error:", error);
     }
+    toggleModal();
   };
 
   return (
@@ -348,7 +349,11 @@ mutation {
                 ))}
                 {inputValue.urlmage && (
                   <div className="mt-4">
-                    <img src={inputValue.urlmage} alt="Village" className="mt-2 w-full h-auto rounded-lg" />
+                    <img
+                      src={inputValue.urlmage}
+                      alt="Village"
+                      className="mt-2 w-full h-auto rounded-lg"
+                    />
                   </div>
                 )}
               </>

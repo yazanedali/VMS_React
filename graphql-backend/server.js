@@ -32,6 +32,15 @@ const schema = buildSchema(`
     getMessages(senderUsername: String!, receiverUsername: String!): [ChatMessage]
 
 
+    totalNumberOfVillages: Int
+
+    totalNumberOfUrbanAreas: Int
+
+    totalPopulationSize: Int
+    
+    averageLandArea: Float
+
+
 
   }
 
@@ -345,6 +354,36 @@ const root = {
         }));
     },
     
+
+    ///Overview
+
+
+
+    totalNumberOfVillages: async () => {
+        const count = await Village.countDocuments();
+        return count;
+    },
+    totalNumberOfUrbanAreas: async () => {
+        const count = await Village.countDocuments({ tags: /urban/i });
+        return count;
+    },
+    totalPopulationSize: async () => {
+        const villages = await Village.find({}, { populationSize: 1 });
+        const totalPopulation = villages.reduce((sum, village) => {
+            const population = parseInt(village.populationSize, 10) || 0;
+            return sum + population;
+        }, 0);
+        return totalPopulation;
+    },
+    averageLandArea: async () => {
+        const villages = await Village.find({}, { landArea: 1 });
+        const totalLandArea = villages.reduce((sum, village) => {
+            const landArea = parseFloat(village.landArea) || 0;
+            return sum + landArea;
+        }, 0);
+        const average = villages.length ? totalLandArea / villages.length : 0;
+        return average;
+    },
     
 
 };
