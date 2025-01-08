@@ -6,7 +6,9 @@ const cors = require('cors');
 const bcrypt = require('bcrypt'); 
 const User = require('./models/user');
 const Village = require('./models/village');
-const Message = require('./models/Message');  // استيراد نموذج الرسالة
+const Message = require('./models/Message');
+const Image = require('./models/gallery');  
+
 
 
 // الاتصال بقاعدة البيانات
@@ -39,6 +41,8 @@ const schema = buildSchema(`
     totalPopulationSize: Int
     
     averageLandArea: Float
+
+    getAllImage: [Image]
 
 
 
@@ -83,6 +87,8 @@ const schema = buildSchema(`
 
     sendMessage(senderUsername: String!, receiverUsername: String!, message: String!): String
 
+    addImage(urlmage: String!, description: String!): String
+
   }
 
   
@@ -92,6 +98,12 @@ const schema = buildSchema(`
     fullName: String
     username: String
     role: String
+  }
+
+    type Image {
+     id: String
+    urlmage: String
+    description: String
   }
   
   type Village {
@@ -383,6 +395,32 @@ const root = {
         }, 0);
         const average = villages.length ? totalLandArea / villages.length : 0;
         return average;
+    },
+
+    getAllImage: async () => {
+        try {
+          const images = await Image.find();
+          return images;
+        } catch (error) {
+          throw new Error('Failed to fetch images: ' + error.message);
+        }
+      },
+
+
+      addImage: async ({ urlmage, description}) => {
+
+        const newImage = new Image({
+            urlmage,
+            description
+        });
+
+        try {
+            const savedImage = await newImage.save();
+            return "done";
+        } catch (error) {
+            console.error('Error save image:', error);
+            throw new Error('Failed to save image');
+        }
     },
     
 
