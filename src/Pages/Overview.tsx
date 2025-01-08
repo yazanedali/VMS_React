@@ -381,7 +381,7 @@ const Overview: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{width: 1220}}>
       <h1 className="text-2xl font-bold mb-6 text-white">Overview</h1>
   
       {/* Map Section */}
